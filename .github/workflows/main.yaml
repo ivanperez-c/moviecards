@@ -79,9 +79,22 @@ jobs:
             -Dsonar.login=admin \
             -Dsonar.password=ivan
  
-  deploy: 
-    needs: qa 
-    runs-on: ubuntu-latest 
-    steps: 
-      - name: despliegue 
-        run: echo "despliegue"
+  deploy:
+    runs-on: ubuntu-latest
+    needs: qa
+    if: github.ref=='refs/heads/master'
+      
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: moviecards-java
+      
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'moviecards-perez'
+          slot-name: 'Production'
+          package: '*.jar'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_61A7FCF331B14D80AD155E093F7A391F }}
