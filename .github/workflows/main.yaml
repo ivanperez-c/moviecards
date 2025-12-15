@@ -85,6 +85,12 @@ jobs:
     if: github.ref=='refs/heads/master'
       
     steps:
+      - name: Aprobación manual 
+        uses: trstringer/manual-approval@v1 
+        with: 
+          secret: ${{ secrets.TOKEN }} 
+          approvers: ivanperez-c 
+
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
