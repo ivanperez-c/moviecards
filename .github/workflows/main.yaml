@@ -72,7 +72,7 @@ jobs:
         run: mvn clean package -DskipTests
 
       - name: Revisar la calidad con Sonarqube
-        run:
+        run: |
           mvn sonar:sonar \
             -Dsonar.host.url=http://localhost:9000 \
             -Dsonar.qualitygate.wait=true \
