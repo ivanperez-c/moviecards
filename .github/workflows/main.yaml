@@ -88,7 +88,7 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
-          name: moviecards-pre-java
+          name: moviecards-java
 
       - name: Deploy to Azure Web App (Preproducción)
         uses: azure/webapps-deploy@v3
