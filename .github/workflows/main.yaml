@@ -79,9 +79,28 @@ jobs:
             -Dsonar.login=admin \
             -Dsonar.password=ivan
  
-  deploy:
+  stage:
     runs-on: ubuntu-latest
     needs: qa
+    if: github.ref == 'refs/heads/fecha-de-fallecimiento'
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: moviecards-java
+
+      - name: Deploy to Azure Web App (Preproducción)
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'moviecards-pre-perez'
+          slot-name: 'Production'
+          package: '*.jar'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_6BE59967422942359052F1AAFF57BFE7 }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: stage
     if: github.ref=='refs/heads/master'
       
     steps:
