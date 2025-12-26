@@ -23,6 +23,11 @@ import java.util.List;
 @Controller
 public class ActorController {
 
+    private static final String ATTR_ACTOR = "actor";
+    private static final String ATTR_TITLE = "title";
+    private static final String VIEW_FORM = "actors/form";
+    private static final String VIEW_LIST = "actors/list";
+    
     private final ActorService actorService;
 
     public ActorController(ActorService actorService) {
@@ -32,20 +37,20 @@ public class ActorController {
     @GetMapping("actors")
     public String getActorsList(Model model) {
         model.addAttribute("actors", actorService.getAllActors());
-        return "actors/list";
+        return VIEW_LIST;
     }
 
     @GetMapping("actors/new")
     public String newActor(Model model) {
-        model.addAttribute("actor", new Actor());
-        model.addAttribute("title", Messages.NEW_ACTOR_TITLE);
-        return "actors/form";
+        model.addAttribute(ATTR_ACTOR, new Actor());
+        model.addAttribute(ATTR_TITLE, Messages.NEW_ACTOR_TITLE);
+        return VIEW_FORM;
     }
 
     @PostMapping("saveActor")
     public String saveActor(@ModelAttribute Actor actor, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            return "actors/form";
+            return VIEW_FORM;
         }
         Actor actorSaved = actorService.save(actor);
         if (actor.getId() != null) {
@@ -54,21 +59,21 @@ public class ActorController {
             model.addAttribute("message", Messages.SAVED_ACTOR_SUCCESS);
         }
 
-        model.addAttribute("actor", actorSaved);
-        model.addAttribute("title", Messages.EDIT_ACTOR_TITLE);
-        return "actors/form";
+        model.addAttribute(ATTR_ACTOR, actorSaved);
+        model.addAttribute(ATTR_TITLE, Messages.EDIT_ACTOR_TITLE);
+        return VIEW_FORM;
     }
 
     @GetMapping("editActor/{actorId}")
     public String editActor(@PathVariable Integer actorId, Model model) {
         Actor actor = actorService.getActorById(actorId);
         List<Movie> movies = actor.getMovies();
-        model.addAttribute("actor", actor);
+        model.addAttribute(ATTR_ACTOR, actor);
         model.addAttribute("movies", movies);
 
-        model.addAttribute("title", Messages.EDIT_ACTOR_TITLE);
+        model.addAttribute(ATTR_TITLE, Messages.EDIT_ACTOR_TITLE);
 
-        return "actors/form";
+        return VIEW_FORM;
     }
 
 
